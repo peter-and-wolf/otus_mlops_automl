@@ -126,7 +126,7 @@ def objective(params):
 
 
 # %%
-mlflow.set_experiment('otus_hyperflow')
+mlflow.set_experiment('otus_hyperflow_exp')
 
 # %%
 trials = Trials()

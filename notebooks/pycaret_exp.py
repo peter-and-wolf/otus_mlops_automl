@@ -56,7 +56,7 @@ s = setup(
   index=False,
   target='humor',
   log_experiment=True,
-  experiment_name='otus_pycaret',
+  experiment_name='otus_pycaret_exp',
   text_features=['text'],
   text_features_method='tf-idf'
 )
@@ -65,7 +65,7 @@ s = setup(
 # Сранение моделей
 best = compare_models(
   #cross_validation=False, 
-  exclude=['qda', 'lda', 'gbc'],
+  exclude=['qda', 'lda', 'gbc', 'ada'],
 )
 
 print(best)
