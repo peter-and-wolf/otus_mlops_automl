@@ -5,3 +5,4 @@ mlruns
 .DS_Store
 .venv
 .ipynb_checkpoints
+logs.log

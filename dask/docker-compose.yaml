@@ -1,0 +1,42 @@
+x-worker-command: &x-worker-command
+  command: [ "dask", "worker", "tcp://dask-scheduler:8786", "--memory-limit", "2 GiB"]
+
+services:
+  dask-scheduler:
+    build: .
+    image: otus-dask
+    container_name: dask-scheduler
+    volumes:
+      - ./apps:/opt/dask/apps
+    command: ["dask", "scheduler"]
+    ports:
+      - "8786:8786"
+      - "8787:8787"
+  
+  dask-worker1:
+    image: otus-dask
+    container_name: dask-worker1
+    <<: *x-worker-command
+
+  dask-worker2:
+    image: otus-dask
+    container_name: dask-worker2
+    <<: *x-worker-command
+
+  dask-worker3:
+    image: otus-dask
+    container_name: dask-worker3
+    <<: *x-worker-command
+
+  notebook:
+    image: otus-dask
+    volumes:
+      - ./apps:/opt/dask/apps
+    environment:
+      - DASK_SCHEDULER_ADDRESS="tcp://dask-scheduler:8786"
+    command: ["jupyter", "notebook", "--allow-root", "--ip", "0.0.0.0", "--no-browser", "--port", "8888"]
+    ports:
+      - 8888:8888
+
+
+

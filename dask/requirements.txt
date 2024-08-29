@@ -1,0 +1,8 @@
+dask[complete]
+fugue==0.9.1
+seaborn==0.13.2
+pycaret==3.3.2
+ipython==8.26.0
+notebook==7.2.1
+ipywidgets==8.1.5
+jupyterlab_widgets==3.0.13
