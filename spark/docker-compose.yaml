@@ -1,0 +1,73 @@
+x-common-env: &x-common-env
+  SPARK_DRIVER_MEMORY: 4G
+  SPARK_WORKER_MEMORY: 4G
+
+x-spark-worker: &x-spark-worker
+  privileged: true
+  image: otus-spark
+  entrypoint: ["/bin/bash", "start_spark.sh", "worker"]
+  depends_on:
+    - spark-master
+  volumes:
+    - ./data:/opt/spark/data
+    - ./apps:/opt/spark/apps
+    - spark-logs:/opt/spark/spark-events
+
+services:
+  spark-master:
+    privileged: true
+    container_name: spark-master
+    build: .
+    image: otus-spark
+    entrypoint: ["/bin/bash", "start_spark.sh", "master"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - ./data:/opt/spark/data
+      - ./apps:/opt/spark/apps
+      - spark-logs:/opt/spark/spark-events
+    environment:
+      <<: *x-common-env
+      SPARK_LOCAL_IP: spark-master
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+      - "9999:9999"
+
+  spark-history:
+    container_name: spark-history
+    image: otus-spark
+    entrypoint: ["/bin/bash", "start_spark.sh", "history"]
+    depends_on:
+      - spark-master
+    environment:
+      SPARK_LOCAL_IP: spark-history
+      SPARK_NO_DAEMONIZE: true
+    volumes:
+      - spark-logs:/opt/spark/spark-events
+    ports:
+      - "18080:18080"
+
+  spark-worker1:
+    <<: *x-spark-worker
+    container_name: spark-worker1
+    environment:
+      <<: *x-common-env
+      SPARK_LOCAL_IP: spark-worker1
+    ports:
+      - "9091:8080"
+
+  spark-worker2:
+    <<: *x-spark-worker
+    container_name: spark-worker2
+    environment:
+      <<: *x-common-env
+      SPARK_LOCAL_IP: spark-worker2
+    ports:
+      - "9092:8080"
+
+volumes:
+  spark-logs:

@@ -1,0 +1,7 @@
+.python-version
+../.DS_Store
+apps/.ipynb_checkpoints
+mlruns
+.DS_Store
+.venv
+.ipynb_checkpoints
