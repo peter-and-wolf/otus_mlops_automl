@@ -1,4 +1,4 @@
-dask[complete]
+dask[complete]==2024.8.1
 fugue==0.9.1
 seaborn==0.13.2
 pycaret==3.3.2
